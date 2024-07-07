@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            display: flex;
+        }
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background-color: #2c3e50;
+            color: white;
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+        }
+        .sidebar h2 {
+            margin-bottom: 40px;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            margin: 10px 0;
+            font-size: 18px;
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            transition: background 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+        .main-content {
+            margin-left: 250px;
+            padding: 20px;
+            flex-grow: 1;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px;
+        }
+        .header h1 {
+            margin: 0;
+        }
+        .header button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .header button:hover {
+            background-color: #c0392b;
+        }
+        .tasks, .users, .settings {
+            margin-top: 20px;
+        }
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #34495e;
+        }
+        .tasks .task, .users .user, .settings .setting {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .task h3, .user h3, .setting h3 {
+            margin: 0;
+            color: #2c3e50;
+        }
+        .task p, .user p, .setting p {
+            color: #7f8c8d;
+        }
+        .task button, .user button, .setting button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 16px;
+        }
+        .task button:hover, .user button:hover, .setting button:hover {
+            background-color: #27ae60;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Admin Dashboard</h2>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#tasks">Tasks</a>
+        <a href="#users">Users</a>
+        <a href="#settings">Settings</a>
+        <a href="#logout">Logout</a>
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <h1>Welcome, Admin</h1>
+            <button id="addTaskButton">Add New Task</button>
+        </div>
+
+        <div id="dashboard" class="tasks">
+            <div class="section-title">Dashboard Overview</div>
+            <div class="task">
+                <h3>Total Tasks</h3>
+                <p id="totalTasks">3</p>
+            </div>
+            <div class="task">
+                <h3>Completed Tasks</h3>
+                <p id="completedTasks">0</p>
+            </div>
+            <div class="task">
+                <h3>Pending Tasks</h3>
+                <p id="pendingTasks">3</p>
+            </div>
+        </div>
+
+        <div id="tasks" class="tasks">
+            <div class="section-title">Manage Tasks</div>
+            <div class="task">
+                <h3>Task 1: Design Homepage</h3>
+                <p>Details about Task 1.</p>
+                <button onclick="completeTask(this)">Complete</button>
+            </div>
+            <div class="task">
+                <h3>Task 2: Implement Login</h3>
+                <p>Details about Task 2.</p>
+                <button onclick="completeTask(this)">Complete</button>
+            </div>
+            <div class="task">
+                <h3>Task 3: Set up Database</h3>
+                <p>Details about Task 3.</p>
+                <button onclick="completeTask(this)">Complete</button>
+            </div>
+        </div>
+
+        <div id="users" class="users">
+            <div class="section-title">Manage Users</div>
+            <div class="user">
+                <h3>User 1: John Doe</h3>
+                <p>Email: john.doe@example.com</p>
+                <button onclick="removeUser(this)">Remove</button>
+            </div>
+            <div class="user">
+                <h3>User 2: Jane Smith</h3>
+                <p>Email: jane.smith@example.com</p>
+                <button onclick="removeUser(this)">Remove</button>
+            </div>
+            <div class="user">
+                <h3>User 3: Bob Johnson</h3>
+                <p>Email: bob.johnson@example.com</p>
+                <button onclick="removeUser(this)">Remove</button>
+            </div>
+        </div>
+
+        <div id="settings" class="settings">
+            <div class="section-title">Settings</div>
+            <div class="setting">
+                <h3>Account Settings</h3>
+                <p>Manage your account settings and set e-mail preferences.</p>
+                <button onclick="editSetting(this)">Edit</button>
+            </div>
+            <div class="setting">
+                <h3>Security Settings</h3>
+                <p>Update your password and secure your account.</p>
+                <button onclick="editSetting(this)">Edit</button>
+            </div>
+            <div class="setting">
+                <h3>Notification Settings</h3>
+                <p>Set your notification preferences.</p>
+                <button onclick="editSetting(this)">Edit</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let totalTasks = 3;
+        let completedTasks = 0;
+        let pendingTasks = totalTasks - completedTasks;
+
+        document.getElementById('addTaskButton').addEventListener('click', addTask);
+
+        function completeTask(button) {
+            button.parentElement.remove();
+            completedTasks++;
+            pendingTasks--;
+            updateTaskOverview();
+        }
+
+        function removeUser(button) {
+            button.parentElement.remove();
+            alert('User removed');
+        }
+
+        function editSetting(button) {
+            alert('Edit settings functionality not implemented yet');
+        }
+
+        function addTask() {
+            const taskContainer = document.createElement('div');
+            taskContainer.classList.add('task');
+            taskContainer.innerHTML = `
+                <h3>New Task</h3>
+                <p>Details about the new task.</p>
+                <button onclick="completeTask(this)">Complete</button>
+            `;
+            document.getElementById('tasks').appendChild(taskContainer);
+            totalTasks++;
+            pendingTasks++;
+            updateTaskOverview();
+        }
+
+        function updateTaskOverview() {
+            document.getElementById('totalTasks').innerText = totalTasks;
+            document.getElementById('completedTasks').innerText = completedTasks;
+            document.getElementById('pendingTasks').innerText = pendingTasks;
+        }
+    </script>
+</body>
+</html>
