@@ -218,6 +218,7 @@
         <div class="header">
             <h1>Welcome, Admin</h1>
             <button id="addTaskButton">Add New Task</button>
+            <button id="addUserButton">Add New User</button>
         </div>
 
         <div id="dashboard" class="tasks">
@@ -264,19 +265,22 @@
 
         <div id="users" class="users">
             <div class="section-title">Manage Users</div>
-            <div class="user">
+            <div class="user" data-user-id="1">
                 <h3>User 1: John Doe</h3>
                 <p>Email: john.doe@example.com</p>
+                <button onclick="editUser(this)">Edit</button>
                 <button onclick="removeUser(this)">Remove</button>
             </div>
-            <div class="user">
+            <div class="user" data-user-id="2">
                 <h3>User 2: Jane Smith</h3>
                 <p>Email: jane.smith@example.com</p>
+                <button onclick="editUser(this)">Edit</button>
                 <button onclick="removeUser(this)">Remove</button>
             </div>
-            <div class="user">
+            <div class="user" data-user-id="3">
                 <h3>User 3: Bob Johnson</h3>
                 <p>Email: bob.johnson@example.com</p>
+                <button onclick="editUser(this)">Edit</button>
                 <button onclick="removeUser(this)">Remove</button>
             </div>
         </div>
@@ -311,14 +315,26 @@
         </div>
     </div>
 
+    <div id="editUserModal" class="modal">
+        <div class="modal-content">
+            <h3>Edit User</h3>
+            <input type="text" id="editUserName" placeholder="User Name">
+            <input type="email" id="editUserEmail" placeholder="User Email">
+            <button onclick="saveUser()">Save</button>
+            <button onclick="closeUserModal()">Cancel</button>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         let totalTasks = 3;
         let completedTasks = 0;
         let pendingTasks = totalTasks - completedTasks;
         let currentTask;
+        let currentUser;
 
         document.getElementById('addTaskButton').addEventListener('click', addTask);
+        document.getElementById('addUserButton').addEventListener('click', addUser);
 
         function completeTask(button) {
             button.parentElement.remove();
@@ -339,19 +355,6 @@
             totalTasks--;
             pendingTasks--;
             updateTaskOverview();
-        }
-
-        function removeUser(button) {
-            button.parentElement.remove();
-            alert('User removed');
-        }
-
-        function editUser(button) {
-            alert('Edit user functionality not implemented yet');
-        }
-
-        function editSetting(button) {
-            alert('Edit settings functionality not implemented yet');
         }
 
         function addTask() {
@@ -385,6 +388,44 @@
             document.getElementById('completedTasks').innerText = completedTasks;
             document.getElementById('pendingTasks').innerText = pendingTasks;
             updateChart();
+        }
+
+        function editUser(button) {
+            currentUser = button.parentElement;
+            document.getElementById('editUserName').value = currentUser.querySelector('h3').innerText;
+            document.getElementById('editUserEmail').value = currentUser.querySelector('p').innerText;
+            document.getElementById('editUserModal').style.display = 'flex';
+        }
+
+        function removeUser(button) {
+            button.parentElement.remove();
+            alert('User removed');
+        }
+
+        function addUser() {
+            const userContainer = document.createElement('div');
+            userContainer.classList.add('user');
+            userContainer.innerHTML = `
+                <h3>New User</h3>
+                <p>Email: new.user@example.com</p>
+                <button onclick="editUser(this)">Edit</button>
+                <button onclick="removeUser(this)">Remove</button>
+            `;
+            document.getElementById('users').appendChild(userContainer);
+        }
+
+        function saveUser() {
+            currentUser.querySelector('h3').innerText = document.getElementById('editUserName').value;
+            currentUser.querySelector('p').innerText = document.getElementById('editUserEmail').value;
+            closeUserModal();
+        }
+
+        function closeUserModal() {
+            document.getElementById('editUserModal').style.display = 'none';
+        }
+
+        function editSetting(button) {
+            alert('Edit settings functionality not implemented yet');
         }
 
         function toggleSidebar() {
