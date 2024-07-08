@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -23,6 +24,14 @@
             flex-direction: column;
             align-items: center;
             padding-top: 20px;
+            transition: width 0.3s;
+        }
+        .sidebar.collapsed {
+            width: 80px;
+        }
+        .sidebar.collapsed a {
+            text-align: center;
+            padding-left: 0;
         }
         .sidebar h2 {
             margin-bottom: 40px;
@@ -33,17 +42,38 @@
             margin: 10px 0;
             font-size: 18px;
             width: 100%;
-            text-align: center;
+            text-align: left;
             padding: 10px 0;
-            transition: background 0.3s;
+            padding-left: 30px;
+            transition: background 0.3s, padding-left 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        .sidebar a i {
+            margin-right: 20px;
         }
         .sidebar a:hover {
             background-color: #34495e;
+            padding-left: 40px;
+        }
+        .sidebar .toggle-btn {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .sidebar.collapsed .toggle-btn {
+            display: flex;
         }
         .main-content {
             margin-left: 250px;
             padding: 20px;
             flex-grow: 1;
+            transition: margin-left 0.3s;
+        }
+        .main-content.collapsed {
+            margin-left: 80px;
         }
         .header {
             background-color: #2c3e50;
@@ -107,16 +137,41 @@
         .hidden {
             display: none;
         }
+        .chart {
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 80px;
+            }
+            .main-content {
+                margin-left: 80px;
+            }
+            .sidebar a {
+                text-align: center;
+                padding-left: 0;
+            }
+            .sidebar a i {
+                margin-right: 0;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <h2>Admin Dashboard</h2>
-        <a href="#dashboard">Dashboard</a>
-        <a href="#tasks">Tasks</a>
-        <a href="#users">Users</a>
-        <a href="#settings">Settings</a>
-        <a href="#logout">Logout</a>
+        <a href="#dashboard"><i class="material-icons">dashboard</i>Dashboard</a>
+        <a href="#tasks"><i class="material-icons">task</i>Tasks</a>
+        <a href="#users"><i class="material-icons">people</i>Users</a>
+        <a href="#settings"><i class="material-icons">settings</i>Settings</a>
+        <a href="#logout"><i class="material-icons">logout</i>Logout</a>
+        <div class="toggle-btn" onclick="toggleSidebar()">
+            <i class="material-icons">menu</i>
+        </div>
     </div>
     <div class="main-content">
         <div class="header">
@@ -126,6 +181,7 @@
 
         <div id="dashboard" class="tasks">
             <div class="section-title">Dashboard Overview</div>
+            <div class="chart" id="taskChart"></div>
             <div class="task">
                 <h3>Total Tasks</h3>
                 <p id="totalTasks">3</p>
@@ -146,16 +202,22 @@
                 <h3>Task 1: Design Homepage</h3>
                 <p>Details about Task 1.</p>
                 <button onclick="completeTask(this)">Complete</button>
+                <button onclick="editTask(this)">Edit</button>
+                <button onclick="deleteTask(this)">Delete</button>
             </div>
             <div class="task">
                 <h3>Task 2: Implement Login</h3>
                 <p>Details about Task 2.</p>
                 <button onclick="completeTask(this)">Complete</button>
+                <button onclick="editTask(this)">Edit</button>
+                <button onclick="deleteTask(this)">Delete</button>
             </div>
             <div class="task">
                 <h3>Task 3: Set up Database</h3>
                 <p>Details about Task 3.</p>
                 <button onclick="completeTask(this)">Complete</button>
+                <button onclick="editTask(this)">Edit</button>
+                <button onclick="deleteTask(this)">Delete</button>
             </div>
         </div>
 
@@ -165,16 +227,19 @@
                 <h3>User 1: John Doe</h3>
                 <p>Email: john.doe@example.com</p>
                 <button onclick="removeUser(this)">Remove</button>
+                <button onclick="editUser(this)">Edit</button>
             </div>
             <div class="user">
                 <h3>User 2: Jane Smith</h3>
                 <p>Email: jane.smith@example.com</p>
                 <button onclick="removeUser(this)">Remove</button>
+                <button onclick="editUser(this)">Edit</button>
             </div>
             <div class="user">
                 <h3>User 3: Bob Johnson</h3>
                 <p>Email: bob.johnson@example.com</p>
                 <button onclick="removeUser(this)">Remove</button>
+                <button onclick="editUser(this)">Edit</button>
             </div>
         </div>
 
@@ -198,6 +263,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         let totalTasks = 3;
         let completedTasks = 0;
@@ -212,9 +278,24 @@
             updateTaskOverview();
         }
 
+        function editTask(button) {
+            alert('Edit task functionality not implemented yet');
+        }
+
+        function deleteTask(button) {
+            button.parentElement.remove();
+            totalTasks--;
+            pendingTasks--;
+            updateTaskOverview();
+        }
+
         function removeUser(button) {
             button.parentElement.remove();
             alert('User removed');
+        }
+
+        function editUser(button) {
+            alert('Edit user functionality not implemented yet');
         }
 
         function editSetting(button) {
@@ -228,6 +309,8 @@
                 <h3>New Task</h3>
                 <p>Details about the new task.</p>
                 <button onclick="completeTask(this)">Complete</button>
+                <button onclick="editTask(this)">Edit</button>
+                <button onclick="deleteTask(this)">Delete</button>
             `;
             document.getElementById('tasks').appendChild(taskContainer);
             totalTasks++;
@@ -239,7 +322,39 @@
             document.getElementById('totalTasks').innerText = totalTasks;
             document.getElementById('completedTasks').innerText = completedTasks;
             document.getElementById('pendingTasks').innerText = pendingTasks;
+            updateChart();
         }
+
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+            document.querySelector('.main-content').classList.toggle('collapsed');
+        }
+
+        function updateChart() {
+            const ctx = document.getElementById('taskChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed Tasks', 'Pending Tasks'],
+                    datasets: [{
+                        data: [completedTasks, pendingTasks],
+                        backgroundColor: ['#2ecc71', '#e74c3c'],
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const chartContainer = document.createElement('canvas');
+            chartContainer.id = 'taskChart';
+            chartContainer.style.height = '300px';
+            document.querySelector('#taskChart').appendChild(chartContainer);
+            updateChart();
+        });
     </script>
 </body>
 </html>
