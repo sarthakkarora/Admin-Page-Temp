@@ -144,6 +144,47 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            width: 300px;
+            text-align: center;
+        }
+        .modal-content h3 {
+            margin-top: 0;
+        }
+        .modal-content input, .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .modal-content button {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px 0 5px;
+        }
+        .modal-content button:hover {
+            background-color: #27ae60;
+        }
         @media screen and (max-width: 768px) {
             .sidebar {
                 width: 80px;
@@ -198,21 +239,21 @@
 
         <div id="tasks" class="tasks">
             <div class="section-title">Manage Tasks</div>
-            <div class="task">
+            <div class="task" data-task-id="1">
                 <h3>Task 1: Design Homepage</h3>
                 <p>Details about Task 1.</p>
                 <button onclick="completeTask(this)">Complete</button>
                 <button onclick="editTask(this)">Edit</button>
                 <button onclick="deleteTask(this)">Delete</button>
             </div>
-            <div class="task">
+            <div class="task" data-task-id="2">
                 <h3>Task 2: Implement Login</h3>
                 <p>Details about Task 2.</p>
                 <button onclick="completeTask(this)">Complete</button>
                 <button onclick="editTask(this)">Edit</button>
                 <button onclick="deleteTask(this)">Delete</button>
             </div>
-            <div class="task">
+            <div class="task" data-task-id="3">
                 <h3>Task 3: Set up Database</h3>
                 <p>Details about Task 3.</p>
                 <button onclick="completeTask(this)">Complete</button>
@@ -227,19 +268,16 @@
                 <h3>User 1: John Doe</h3>
                 <p>Email: john.doe@example.com</p>
                 <button onclick="removeUser(this)">Remove</button>
-                <button onclick="editUser(this)">Edit</button>
             </div>
             <div class="user">
                 <h3>User 2: Jane Smith</h3>
                 <p>Email: jane.smith@example.com</p>
                 <button onclick="removeUser(this)">Remove</button>
-                <button onclick="editUser(this)">Edit</button>
             </div>
             <div class="user">
                 <h3>User 3: Bob Johnson</h3>
                 <p>Email: bob.johnson@example.com</p>
                 <button onclick="removeUser(this)">Remove</button>
-                <button onclick="editUser(this)">Edit</button>
             </div>
         </div>
 
@@ -263,11 +301,22 @@
         </div>
     </div>
 
+    <div id="editTaskModal" class="modal">
+        <div class="modal-content">
+            <h3>Edit Task</h3>
+            <input type="text" id="editTaskName" placeholder="Task Name">
+            <textarea id="editTaskDetails" rows="4" placeholder="Task Details"></textarea>
+            <button onclick="saveTask()">Save</button>
+            <button onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         let totalTasks = 3;
         let completedTasks = 0;
         let pendingTasks = totalTasks - completedTasks;
+        let currentTask;
 
         document.getElementById('addTaskButton').addEventListener('click', addTask);
 
@@ -279,7 +328,10 @@
         }
 
         function editTask(button) {
-            alert('Edit task functionality not implemented yet');
+            currentTask = button.parentElement;
+            document.getElementById('editTaskName').value = currentTask.querySelector('h3').innerText;
+            document.getElementById('editTaskDetails').value = currentTask.querySelector('p').innerText;
+            document.getElementById('editTaskModal').style.display = 'flex';
         }
 
         function deleteTask(button) {
@@ -316,6 +368,16 @@
             totalTasks++;
             pendingTasks++;
             updateTaskOverview();
+        }
+
+        function saveTask() {
+            currentTask.querySelector('h3').innerText = document.getElementById('editTaskName').value;
+            currentTask.querySelector('p').innerText = document.getElementById('editTaskDetails').value;
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('editTaskModal').style.display = 'none';
         }
 
         function updateTaskOverview() {
